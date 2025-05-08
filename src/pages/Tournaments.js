@@ -110,26 +110,43 @@ export default function TournamentsPage() {
     const fetchTournaments = async () => {
       try {
         setLoading(true);
+        console.log('Fetching tournaments from backend API...');
         const response = await fetch('http://localhost:5000/api/tournaments');
         
         if (!response.ok) {
-          throw new Error('Failed to fetch tournaments');
+          throw new Error(`Failed to fetch tournaments: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('Successfully fetched tournaments:', data);
+        
+        // Add debug information for each tournament
+        data.forEach((tournament, index) => {
+          console.log(`Tournament ${index + 1}:`, {
+            id: tournament._id || tournament.id,
+            title: tournament.title,
+            game: tournament.game,
+            date: tournament.date,
+            formattedDate: tournament.date ? new Date(tournament.date).toLocaleDateString() : 'No date',
+            isDummy: tournament.isDummy || false
+          });
+        });
+        
         setDbTournaments(data);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching tournaments:', err);
         setError(err.message);
         setLoading(false);
+        // Always fall back to empty array so dummy data will be displayed
+        setDbTournaments([]);
       }
     };
     
     fetchTournaments();
   }, []);
   
-  // Combine real and dummy tournaments
+  // Combine real and dummy tournaments - always include dummy data for demo purposes
   const allTournaments = [
     ...dbTournaments,
     ...dummyTournaments
@@ -168,6 +185,68 @@ export default function TournamentsPage() {
     />
   );
 
+  // Tournament card rendering function - extract to reuse code
+  const renderTournamentCard = (tournament) => {
+    // Safely handle date display
+    const formatDate = (dateString) => {
+      if (!dateString) return "TBD";
+      try {
+        return new Date(dateString).toLocaleDateString();
+      } catch (e) {
+        console.error("Date parsing error:", e, dateString);
+        return "Invalid Date";
+      }
+    };
+    
+    return (
+      <motion.div 
+        key={tournament._id || tournament.id}
+        className={`bg-cyber-gray rounded-lg overflow-hidden cursor-pointer ${tournament.isDummy ? 'border-2 border-neon-pink' : ''}`}
+        whileHover={{ y: -10, boxShadow: '0 0 15px rgba(0, 242, 255, 0.5)' }}
+        onClick={() => tournament.isDummy ? null : navigate(`/tournaments/${tournament._id}`)}
+      >
+        <div className="relative">
+          <img src={tournament.imageUrl || "https://picsum.photos/800/450?random=99"} alt={tournament.title} className="w-full h-56 object-cover" />
+          <div className={`absolute top-0 right-0 m-4 px-2 py-1 rounded font-future text-cyber-black font-bold ${
+            tournament.registrationStatus === "Open" ? "bg-neon-blue" :
+            tournament.registrationStatus === "Closed" ? "bg-gray-500" : "bg-neon-purple"
+          }`}>
+            {tournament.registrationStatus || "Unknown"}
+          </div>
+          {tournament.isDummy && (
+            <div className="absolute top-0 left-0 m-4 px-2 py-1 bg-neon-pink rounded font-future text-cyber-black font-bold">
+              DEMO
+            </div>
+          )}
+        </div>
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-3">
+            <h3 className="font-future text-xl font-bold">{tournament.title}</h3>
+            <span className="bg-neon-purple text-white text-xs px-2 py-1 rounded">{tournament.game}</span>
+          </div>
+          <div className="flex flex-col gap-2 text-gray-400 mb-4">
+            <div className="flex justify-between">
+              <span>Prize Pool: <span className="text-neon-pink">{tournament.prize || "TBD"}</span></span>
+              <span>Entry: <span className="text-white">{tournament.entryFee || "Free"}</span></span>
+            </div>
+            <div className="flex justify-between">
+              <span>Date: <span className="text-white">{formatDate(tournament.date)}</span></span>
+              <span>Location: <span className="text-white">{tournament.location || "TBD"}</span></span>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 pt-4 mt-4 flex justify-between items-center">
+            <span className="text-neon-blue">{tournament.participants || 0} / {tournament.maxParticipants || "∞"} Participants</span>
+            <button className={`px-4 py-2 rounded font-future ${
+              tournament.registrationStatus === "Open" ? "bg-neon-blue hover:bg-neon-purple" : "bg-gray-700 cursor-not-allowed"
+            } transition-colors duration-300`}>
+              DETAILS
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-cyber-black text-white">
       {/* Page header with search */}
@@ -186,18 +265,27 @@ export default function TournamentsPage() {
           <h2 className="font-future text-3xl font-bold mb-2">UPCOMING <span className="text-neon-blue">TOURNAMENTS</span></h2>
           <div className="h-1 w-24 bg-neon-blue mb-10"></div>
           
-          {loading && dbTournaments.length === 0 ? (
+          {loading ? (
             <div className="text-center py-20">
               <div className="spinner w-12 h-12 mx-auto border-4 border-neon-blue border-t-transparent rounded-full animate-spin mb-4"></div>
               <p className="text-gray-400">Loading tournaments...</p>
             </div>
-          ) : error && dbTournaments.length === 0 ? (
-            <div className="text-center py-20">
-              <svg className="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <h3 className="text-2xl font-future text-red-400 mb-2">Error Loading Tournaments</h3>
-              <p className="text-gray-500">{error}</p>
+          ) : error ? (
+            <div>
+              <div className="text-center py-8">
+                <svg className="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 className="text-2xl font-future text-red-400 mb-2">Error Loading Tournaments</h3>
+                <p className="text-gray-500 mb-8">{error}</p>
+                <p className="text-neon-blue">Showing demo tournaments below</p>
+              </div>
+              
+              {filteredTournaments.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filteredTournaments.map(tournament => renderTournamentCard(tournament))}
+                </div>
+              )}
             </div>
           ) : filteredTournaments.length === 0 ? (
             <div className="text-center py-20">
@@ -209,53 +297,7 @@ export default function TournamentsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredTournaments.map((tournament) => (
-                <motion.div 
-                  key={tournament._id || tournament.id}
-                  className={`bg-cyber-gray rounded-lg overflow-hidden cursor-pointer ${tournament.isDummy ? 'border-2 border-neon-pink' : ''}`}
-                  whileHover={{ y: -10, boxShadow: '0 0 15px rgba(0, 242, 255, 0.5)' }}
-                  onClick={() => tournament.isDummy ? null : navigate(`/tournaments/${tournament._id}`)}
-                >
-                  <div className="relative">
-                    <img src={tournament.imageUrl || "https://picsum.photos/800/450?random=99"} alt={tournament.title} className="w-full h-56 object-cover" />
-                    <div className={`absolute top-0 right-0 m-4 px-2 py-1 rounded font-future text-cyber-black font-bold ${
-                      tournament.registrationStatus === "Open" ? "bg-neon-blue" :
-                      tournament.registrationStatus === "Closed" ? "bg-gray-500" : "bg-neon-purple"
-                    }`}>
-                      {tournament.registrationStatus}
-                    </div>
-                    {tournament.isDummy && (
-                      <div className="absolute top-0 left-0 m-4 px-2 py-1 bg-neon-pink rounded font-future text-cyber-black font-bold">
-                        DEMO
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="font-future text-xl font-bold">{tournament.title}</h3>
-                      <span className="bg-neon-purple text-white text-xs px-2 py-1 rounded">{tournament.game}</span>
-                    </div>
-                    <div className="flex flex-col gap-2 text-gray-400 mb-4">
-                      <div className="flex justify-between">
-                        <span>Prize Pool: <span className="text-neon-pink">{tournament.prize}</span></span>
-                        <span>Entry: <span className="text-white">{tournament.entryFee}</span></span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Date: <span className="text-white">{new Date(tournament.date).toLocaleDateString()}</span></span>
-                        <span>Location: <span className="text-white">{tournament.location}</span></span>
-                      </div>
-                    </div>
-                    <div className="border-t border-gray-700 pt-4 mt-4 flex justify-between items-center">
-                      <span className="text-neon-blue">{tournament.participants} / {tournament.maxParticipants} Participants</span>
-                      <button className={`px-4 py-2 rounded font-future ${
-                        tournament.registrationStatus === "Open" ? "bg-neon-blue hover:bg-neon-purple" : "bg-gray-700 cursor-not-allowed"
-                      } transition-colors duration-300`}>
-                        DETAILS
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+              {filteredTournaments.map(tournament => renderTournamentCard(tournament))}
             </div>
           )}
         </div>
