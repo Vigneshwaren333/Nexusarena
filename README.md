@@ -1,144 +1,106 @@
-# Esports Tournament Platform
+# Nexus Arena - Esports Tournament Platform
 
-A modern web application for managing esports tournaments with MongoDB integration.
+![Nexus Arena](https://picsum.photos/800/400?random=1)
+
+Nexus Arena is a modern, feature-rich esports tournament platform that enables users to create, join, and manage gaming tournaments across various games and platforms.
 
 ## Features
 
-- Browse tournaments, events, and arenas
-- Create and manage tournaments
-- User authentication (sign-up and sign-in)
-- Cyberpunk-themed UI
-- MongoDB integration for data persistence
+- **Tournament Management**: Create, browse, and join esports tournaments
+- **User Authentication**: Secure login and registration system
+- **Responsive Design**: Modern UI optimized for all devices
+- **Real-time Updates**: Get instant notifications about tournament progress
+- **Rich Tournament Details**: Comprehensive information including prizes, schedules, and rules
 
 ## Tech Stack
 
-- **Frontend**: React, Tailwind CSS, Framer Motion
-- **Backend**: Express, MongoDB, Mongoose
-- **Development**: Concurrently, Nodemon
+- **Frontend**: React.js with Framer Motion for animations
+- **Backend**: Node.js with Express.js
+- **Database**: MongoDB
+- **Styling**: Tailwind CSS with custom cyberpunk theme
 
-## Setup Instructions
+## Installation
 
 ### Prerequisites
 
-- Node.js (v16+)
-- MongoDB (local installation or MongoDB Atlas account)
-- MongoDB Compass (for database visualization)
+- Node.js (v14.0.0 or higher)
+- MongoDB (v4.4 or higher)
+- npm or yarn
 
-### Installation
+### Setup Instructions
 
-1. Clone the repository
-```bash
-git clone [repository-url]
-cd esports-tournament-platform
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Configure MongoDB
-
-   a. Create a `.env` file in the root directory using the example:
+1. Clone the repository:
    ```
-   # Copy from env.example
-   cp env.example .env
-   ```
-   
-   b. Update the MongoDB connection string in `.env`:
-   ```
-   MONGODB_URI=mongodb://localhost:27017/esportsPlatform
-   ```
-   
-   If using MongoDB Atlas, replace with your connection string:
-   ```
-   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/esportsPlatform
-   ```
-   
-   c. Add JWT secret for authentication:
-   ```
-   JWT_SECRET=your-secret-key-here
+   git clone https://github.com/Vigneshwaren333/Nexusarena.git
+   cd Nexusarena
    ```
 
-4. Run the development server
-```bash
-npm run dev
-```
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-This will start both the React frontend (http://localhost:3000) and Express backend (http://localhost:5000) concurrently.
+3. Set up environment variables:
+   - Create a `.env` file in the root directory
+   - Add the following configurations:
+     ```
+     PORT=3000
+     BACKEND_PORT=5000
+     MONGODB_URI=mongodb://127.0.0.1:27017/esportsPlatform
+     JWT_SECRET=your-secret-key-for-jwt-tokens
+     ```
 
-## MongoDB Connection
+4. Start the development server:
+   ```
+   npm start
+   ```
 
-- Ensure your MongoDB service is running if using a local installation
-- Open MongoDB Compass and connect to the same URI specified in your `.env` file
-- The application will automatically create the required collections
+## Usage
 
-### Required MongoDB Collections
+After starting the server, you can access:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
 
-Before running the application, make sure you have the following collections in your MongoDB database:
+### Example API Endpoints
 
-1. **tournaments** - Stores tournament data
-2. **users** - Stores user accounts for authentication
-
-These collections will be created automatically when the application runs and data is added for the first time.
+- `GET /api/tournaments` - Get all tournaments
+- `POST /api/tournaments` - Create a new tournament
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login a user
 
 ## Project Structure
 
 ```
-/
-├── public/               # Static assets
-├── server/               # Backend code
-│   ├── models/           # MongoDB schemas
-│   ├── routes/           # API routes
-│   └── index.js          # Server entry point
-├── src/                  # Frontend code
-│   ├── components/       # Reusable UI components
-│   ├── pages/            # Main page components
-│   └── App.js            # Main application component
-├── .env                  # Environment variables (create from env.example)
-└── package.json          # Project dependencies and scripts
+esports-tournament-platform/
+├── public/                 # Static files
+├── src/                    # Source code
+│   ├── api/                # API client functions
+│   ├── components/         # React components
+│   ├── lib/                # Utility functions
+│   ├── models/             # Database models
+│   ├── pages/              # Page components
+│   ├── routes/             # API routes
+│   ├── server/             # Server-side code
+│   └── index.js            # Entry point
+├── scripts/                # Helper scripts
+├── .env                    # Environment variables
+├── package.json            # Dependencies and scripts
+└── README.md               # Project documentation
 ```
 
-## User Authentication
+## License
 
-The platform includes user authentication with the following features:
-- User registration and login
-- JWT token-based authentication
-- Protected routes for authorized users
-- User profile management
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Creating Tournaments
+## Contact
 
-1. Navigate to the Tournaments page
-2. Click the "CREATE TOURNAMENT" button
-3. Fill out the tournament details in the form
-4. Submit the form to save to MongoDB
-5. Your tournament will appear in the tournaments list
+For any inquiries, please reach out to:
+- GitHub: [@Vigneshwaren333](https://github.com/Vigneshwaren333)
 
-## Recent Updates
+## Acknowledgements
 
-### UI Improvements (May 2024)
-
-- **PageHeader Component Enhancement**: 
-  - Added more padding at the top to prevent header content from sticking to the navigation bar
-  - Increased minimum height for better visual spacing
-  - Improved spacing between title and subtitle elements
-  - Optimized spacing for the search section beneath page headers
-  - Made spacing uniform across all pages for visual consistency
-
-- **Search Components**:
-  - Created specialized search components for different sections:
-    - TournamentSearch: For filtering tournaments by game and registration status
-    - ArenaSearch: For searching venue locations and capacities
-    - GallerySearch: For filtering photo gallery by categories
-    - CommunitySearch: For searching community posts and discussions
-
-- **Background Image Extension**:
-  - Background images now extend to cover both header and search bar sections in all pages
-  - Implemented with a unified design approach using the PageHeader component
-
-## Development Notes
-
-- The application uses concurrently to run both frontend and backend in development
-- Changes to backend code require server restart (handled by nodemon)
-- Frontend uses React's development server with hot reloading
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [MongoDB](https://www.mongodb.com/)
+- [Express.js](https://expressjs.com/)
+- [React.js](https://reactjs.org/)
