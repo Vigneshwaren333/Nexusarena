@@ -1,13 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root variables for consistent theming */
+:root {
+  --neon-blue: #00f2ff;
+  --neon-purple: #7122fa;
+  --neon-pink: #ff00ff;
+  --cyber-black: #0a0a0a;
+  --cyber-gray: #1a1a1a;
+  --cyber-dark: #131313;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--cyber-black);
+  color: white;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Futuristic components and utilities */
+@layer components {
+  /* Glass panels */
+  .glass-panel {
+    @apply bg-cyber-gray/30 backdrop-blur-md border border-white/10 rounded-lg;
+  }
+  
+  .glass-panel-dark {
+    @apply bg-cyber-black/70 backdrop-blur-md border border-neon-blue/20 rounded-lg;
+  }
+
+  .glass-panel-purple {
+    @apply bg-cyber-gray/30 backdrop-blur-md border border-neon-purple/20 rounded-lg;
+  }
+
+  /* Neon borders and highlights */
+  .neon-border-blue {
+    @apply border border-neon-blue/50 shadow-[0_0_10px_rgba(0,242,255,0.3)];
+  }
+  
+  .neon-border-purple {
+    @apply border border-neon-purple/50 shadow-[0_0_10px_rgba(113,34,250,0.3)];
+  }
+  
+  .neon-border-pink {
+    @apply border border-neon-pink/50 shadow-[0_0_10px_rgba(255,0,255,0.3)];
+  }
+
+  /* Futuristic buttons */
+  .btn-cyber {
+    @apply px-6 py-2 font-future font-bold rounded transition-all duration-300;
+  }
+  
+  .btn-cyber-blue {
+    @apply btn-cyber bg-neon-blue/90 text-cyber-black hover:bg-neon-blue hover:shadow-[0_0_15px_rgba(0,242,255,0.5)];
+  }
+  
+  .btn-cyber-purple {
+    @apply btn-cyber bg-neon-purple/90 text-white hover:bg-neon-purple hover:shadow-[0_0_15px_rgba(113,34,250,0.5)];
+  }
+
+  .btn-cyber-outline {
+    @apply btn-cyber bg-transparent border border-neon-blue text-neon-blue hover:bg-neon-blue/10 hover:shadow-[0_0_15px_rgba(0,242,255,0.3)];
+  }
+
+  /* Animated grid background */
+  .cyber-grid {
+    background-image: 
+      linear-gradient(to right, rgba(0, 242, 255, 0.07) 1px, transparent 1px), 
+      linear-gradient(to bottom, rgba(0, 242, 255, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .cyber-grid-purple {
+    background-image: 
+      linear-gradient(to right, rgba(113, 34, 250, 0.07) 1px, transparent 1px), 
+      linear-gradient(to bottom, rgba(113, 34, 250, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Glowing text */
+  .text-glow-blue {
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.7);
+  }
+  
+  .text-glow-purple {
+    text-shadow: 0 0 10px rgba(113, 34, 250, 0.7);
+  }
+  
+  .text-glow-pink {
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-lg;
+  }
+
+  /* Futuristic inputs */
+  .input-cyber {
+    @apply bg-cyber-black/80 border border-neon-blue/30 text-white py-3 px-4 rounded focus:outline-none focus:border-neon-blue/70 focus:shadow-[0_0_10px_rgba(0,242,255,0.2)] transition-all duration-300;
+  }
+}
+
+/* Font class */
+.font-future {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.font-cyber {
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-code {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.02em;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cyber-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-blue);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-purple);
+}
+
+/* Animated elements */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px 0px var(--neon-blue);
+  }
+  50% {
+    box-shadow: 0 0 20px 2px var(--neon-blue);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Overlay gradient for image cards */
+.image-overlay-gradient {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.8) 100%);
+}
+
+/* Responsive font sizes */
+@media (max-width: 640px) {
+  h1.headline {
+    font-size: 2rem !important;
+  }
+  h2.section-title {
+    font-size: 1.5rem !important;
+  }
 }

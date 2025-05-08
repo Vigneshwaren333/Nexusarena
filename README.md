@@ -1,70 +1,144 @@
-# Getting Started with Create React App
+# Esports Tournament Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern web application for managing esports tournaments with MongoDB integration.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Browse tournaments, events, and arenas
+- Create and manage tournaments
+- User authentication (sign-up and sign-in)
+- Cyberpunk-themed UI
+- MongoDB integration for data persistence
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React, Tailwind CSS, Framer Motion
+- **Backend**: Express, MongoDB, Mongoose
+- **Development**: Concurrently, Nodemon
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup Instructions
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v16+)
+- MongoDB (local installation or MongoDB Atlas account)
+- MongoDB Compass (for database visualization)
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository
+```bash
+git clone [repository-url]
+cd esports-tournament-platform
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Configure MongoDB
 
-### `npm run eject`
+   a. Create a `.env` file in the root directory using the example:
+   ```
+   # Copy from env.example
+   cp env.example .env
+   ```
+   
+   b. Update the MongoDB connection string in `.env`:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/esportsPlatform
+   ```
+   
+   If using MongoDB Atlas, replace with your connection string:
+   ```
+   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/esportsPlatform
+   ```
+   
+   c. Add JWT secret for authentication:
+   ```
+   JWT_SECRET=your-secret-key-here
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. Run the development server
+```bash
+npm run dev
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This will start both the React frontend (http://localhost:3000) and Express backend (http://localhost:5000) concurrently.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## MongoDB Connection
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Ensure your MongoDB service is running if using a local installation
+- Open MongoDB Compass and connect to the same URI specified in your `.env` file
+- The application will automatically create the required collections
 
-## Learn More
+### Required MongoDB Collections
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Before running the application, make sure you have the following collections in your MongoDB database:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **tournaments** - Stores tournament data
+2. **users** - Stores user accounts for authentication
 
-### Code Splitting
+These collections will be created automatically when the application runs and data is added for the first time.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Project Structure
 
-### Analyzing the Bundle Size
+```
+/
+├── public/               # Static assets
+├── server/               # Backend code
+│   ├── models/           # MongoDB schemas
+│   ├── routes/           # API routes
+│   └── index.js          # Server entry point
+├── src/                  # Frontend code
+│   ├── components/       # Reusable UI components
+│   ├── pages/            # Main page components
+│   └── App.js            # Main application component
+├── .env                  # Environment variables (create from env.example)
+└── package.json          # Project dependencies and scripts
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## User Authentication
 
-### Making a Progressive Web App
+The platform includes user authentication with the following features:
+- User registration and login
+- JWT token-based authentication
+- Protected routes for authorized users
+- User profile management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Creating Tournaments
 
-### Advanced Configuration
+1. Navigate to the Tournaments page
+2. Click the "CREATE TOURNAMENT" button
+3. Fill out the tournament details in the form
+4. Submit the form to save to MongoDB
+5. Your tournament will appear in the tournaments list
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Recent Updates
 
-### Deployment
+### UI Improvements (May 2024)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **PageHeader Component Enhancement**: 
+  - Added more padding at the top to prevent header content from sticking to the navigation bar
+  - Increased minimum height for better visual spacing
+  - Improved spacing between title and subtitle elements
+  - Optimized spacing for the search section beneath page headers
+  - Made spacing uniform across all pages for visual consistency
 
-### `npm run build` fails to minify
+- **Search Components**:
+  - Created specialized search components for different sections:
+    - TournamentSearch: For filtering tournaments by game and registration status
+    - ArenaSearch: For searching venue locations and capacities
+    - GallerySearch: For filtering photo gallery by categories
+    - CommunitySearch: For searching community posts and discussions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Background Image Extension**:
+  - Background images now extend to cover both header and search bar sections in all pages
+  - Implemented with a unified design approach using the PageHeader component
+
+## Development Notes
+
+- The application uses concurrently to run both frontend and backend in development
+- Changes to backend code require server restart (handled by nodemon)
+- Frontend uses React's development server with hot reloading
