@@ -1,6 +1,6 @@
 # Nexus Arena - Esports Tournament Platform
 
-![Nexus Arena](https://picsum.photos/800/400?random=1)
+
 
 Nexus Arena is a modern, feature-rich esports tournament platform that enables users to create, join, and manage gaming tournaments across various games and platforms.
 
